@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String       @id @default(uuid())
+  email      String       @unique
+  name       String?
+  password   String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deletedAt  DateTime?
+  Withdrawal Withdrawal[]
+  Deposit    Deposit[]
+  UserType   UserType     @relation(fields: [userTypeId], references: [id])
+  userTypeId String
+}
+
+model UserType {
+  id          String           @id @default(uuid())
+  name        String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  deletedAt   DateTime?
+  User        User[]
+  permissions UserPermission[]
+}
+
+model UserPermission {
+  id         String    @id @default(uuid())
+  name       String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+  UserType   UserType? @relation(fields: [userTypeId], references: [id])
+  userTypeId String?
+}
+
+model Item {
+  id             String       @id @default(uuid())
+  name           String
+  amount         Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+  Withdrawal     Withdrawal[]
+  Deposit        Deposit[]
+  ItemType       ItemType     @relation(fields: [itemTypeId], references: [id])
+  itemTypeId     String
+  ItemCategory   ItemCategory @relation(fields: [itemCategoryId], references: [id])
+  itemCategoryId String
+}
+
+model ItemType {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Item      Item[]
+}
+
+model ItemCategory {
+  id        String    @id @default(uuid())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Item      Item[]
+}
+
+model Withdrawal {
+  id        String    @id @default(uuid())
+  userId    String
+  itemId    String
+  amount    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Item      Item      @relation(fields: [itemId], references: [id])
+  User      User      @relation(fields: [userId], references: [id])
+}
+
+model Deposit {
+  id        String    @id @default(uuid())
+  userId    String
+  amount    Int
+  itemId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  User      User      @relation(fields: [userId], references: [id])
+  Item      Item      @relation(fields: [itemId], references: [id])
+}
