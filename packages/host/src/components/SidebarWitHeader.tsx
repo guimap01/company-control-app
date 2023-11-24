@@ -1,6 +1,5 @@
 import {
   IconButton,
-  Avatar,
   Box,
   Flex,
   HStack,
@@ -16,34 +15,34 @@ import {
   FlexProps,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuList,
 } from '@chakra-ui/react';
 import {
   FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
   FiMenu,
   FiBell,
   FiChevronDown,
+  FiUsers,
+  FiUser,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import { Outlet } from 'react-router';
+import { LoadingMF } from './LoadingMF';
+import { ErrorBoundary } from './ErrorBoundary';
+import { ErrorMF } from './ErrorMF';
 
 interface LinkItemProps {
   name: string;
   icon: IconType;
+  to: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Home', icon: FiHome },
-  { name: 'Trending', icon: FiTrendingUp },
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Favourites', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
+  { name: 'Estoque', icon: FiHome, to: '/' },
+  { name: 'Funcionários', icon: FiUsers, to: '/employees' },
 ];
+
+const appName = 'App Controle';
 
 export default function SidebarWithHeader() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -68,8 +67,22 @@ export default function SidebarWithHeader() {
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        <Outlet />
+      <Box
+        ml={{ base: 0, md: 60 }}
+        p="4"
+        w="full"
+        h="full"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minH={'calc(100vh - 5rem)'}
+      >
+        <ErrorBoundary
+          suspenseFallback={<LoadingMF />}
+          errorFallback={<ErrorMF />}
+        >
+          <Outlet />
+        </ErrorBoundary>
       </Box>
     </Box>
   );
@@ -93,7 +106,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+          {appName}
         </Text>
       </Flex>
       {LinkItems.map((link) => (
@@ -175,7 +188,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         fontFamily="monospace"
         fontWeight="bold"
       >
-        Logo
+        {appName}
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
@@ -193,12 +206,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               _focus={{ boxShadow: 'none' }}
             >
               <HStack>
-                <Avatar
-                  size={'sm'}
-                  src={
-                    'https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                  }
-                />
+                <FiUser fontSize="24px" />
                 <VStack
                   display={{ base: 'none', md: 'flex' }}
                   alignItems="flex-start"
@@ -219,11 +227,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
             >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
-              <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem>Sair</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

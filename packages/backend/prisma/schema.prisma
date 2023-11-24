@@ -29,36 +29,39 @@ enum Role {
 }
 
 model Item {
-  id             String       @id @default(uuid())
-  name           String
+  id             String        @id @default(uuid())
+  name           String        @unique
   amount         Int
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
   deletedAt      DateTime?
   Withdrawal     Withdrawal[]
   Deposit        Deposit[]
-  ItemType       ItemType     @relation(fields: [itemTypeId], references: [id])
+  ItemType       ItemType      @relation(fields: [itemTypeId], references: [id])
   itemTypeId     String
-  ItemCategory   ItemCategory @relation(fields: [itemCategoryId], references: [id])
-  itemCategoryId String
+  ItemCategory   ItemCategory? @relation(fields: [itemCategoryId], references: [id])
+  itemCategoryId String?
 }
 
 model ItemType {
-  id        String    @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  Item      Item[]
+  id             String       @id @default(uuid())
+  name           String       @unique
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+  Item           Item[]
+  itemCategoryId String
+  ItemCategory   ItemCategory @relation(fields: [itemCategoryId], references: [id])
 }
 
 model ItemCategory {
-  id        String    @id @default(uuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        String     @id @default(uuid())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   deletedAt DateTime?
   Item      Item[]
+  ItemType  ItemType[]
 }
 
 model Withdrawal {

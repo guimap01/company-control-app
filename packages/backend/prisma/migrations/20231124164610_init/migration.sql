@@ -24,7 +24,7 @@ CREATE TABLE "Item" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
     "itemTypeId" TEXT NOT NULL,
-    "itemCategoryId" TEXT NOT NULL,
+    "itemCategoryId" TEXT,
 
     CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
 );
@@ -36,6 +36,7 @@ CREATE TABLE "ItemType" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
+    "itemCategoryId" TEXT NOT NULL,
 
     CONSTRAINT "ItemType_pkey" PRIMARY KEY ("id")
 );
@@ -80,11 +81,23 @@ CREATE TABLE "Deposit" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Item_name_key" ON "Item"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ItemType_name_key" ON "ItemType"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ItemCategory_name_key" ON "ItemCategory"("name");
+
 -- AddForeignKey
 ALTER TABLE "Item" ADD CONSTRAINT "Item_itemTypeId_fkey" FOREIGN KEY ("itemTypeId") REFERENCES "ItemType"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Item" ADD CONSTRAINT "Item_itemCategoryId_fkey" FOREIGN KEY ("itemCategoryId") REFERENCES "ItemCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Item" ADD CONSTRAINT "Item_itemCategoryId_fkey" FOREIGN KEY ("itemCategoryId") REFERENCES "ItemCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ItemType" ADD CONSTRAINT "ItemType_itemCategoryId_fkey" FOREIGN KEY ("itemCategoryId") REFERENCES "ItemCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Withdrawal" ADD CONSTRAINT "Withdrawal_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

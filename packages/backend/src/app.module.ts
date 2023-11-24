@@ -7,9 +7,16 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
 import { RolesGuard } from './shared/guards/roles.guard';
+import { ItemsModule } from './items/items.module';
 
 @Module({
-  imports: [UsersModule, AuthModule, ConfigModule.forRoot(), DatabaseModule],
+  imports: [
+    UsersModule,
+    AuthModule,
+    ConfigModule.forRoot(),
+    DatabaseModule,
+    ItemsModule,
+  ],
   controllers: [AppController],
   providers: [
     {
