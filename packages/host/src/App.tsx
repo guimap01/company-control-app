@@ -10,7 +10,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
-        <AppRoutes />
+        <AppRoutes queryClient={queryClient} />
         <ToastContainer
           position="top-right"
           autoClose={5000}

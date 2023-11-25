@@ -10,11 +10,13 @@ export async function findAllPaginated<T = any>({
   page = 1,
   withDeleted = false,
   where = {},
+  ...rest
 }: {
   service: any;
   page?: number;
   withDeleted?: boolean;
   where?: any;
+  [key: string]: any;
 }): Promise<FindAllPaginatedResponse<T>> {
   const count = await service.count();
 
@@ -25,6 +27,7 @@ export async function findAllPaginated<T = any>({
       ...(withDeleted ? {} : { deletedAt: null }),
       ...where,
     },
+    ...rest,
   });
 
   return {

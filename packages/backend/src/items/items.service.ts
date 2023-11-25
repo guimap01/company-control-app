@@ -39,6 +39,10 @@ export class ItemsService {
         ...(itemTypeId ? { itemTypeId } : {}),
         ...(itemCategoryId ? { itemCategoryId } : {}),
       },
+      include: {
+        ItemCategory: true,
+        ItemType: true,
+      },
     });
   }
 
