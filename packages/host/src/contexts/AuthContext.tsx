@@ -63,9 +63,8 @@ export function AuthProvider() {
     const token = localStorage.getItem('access_token');
     if (token && !user) {
       try {
-        const response = await api.get<UserType>('/auth/profile');
+        const response = await api.get<UserType>('/profile');
         setUser(response.data);
-        api.defaults.headers['Authorization'] = `Bearer ${token}`;
       } catch (error) {
         setUser(undefined);
         localStorage.removeItem('access_token');
@@ -76,7 +75,7 @@ export function AuthProvider() {
     if (!token && window.location.pathname !== '/login') {
       navigate('/login');
     }
-  }, [window.location.pathname]);
+  }, []);
 
   function logout() {
     setUser(undefined);

@@ -3,7 +3,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import SidebarWithHeader from '../components/SidebarWitHeader';
 import { AuthProvider } from '../contexts/AuthContext';
-const Login = lazy(() => import('../pages/Login'));
+import Login from '../pages/Login';
+import { EmptyPage } from '../components/EmptyPage';
 const StockApp = lazy(() => import('stockApp/Stock'));
 
 export const AppRoutes = () => {
@@ -13,6 +14,7 @@ export const AppRoutes = () => {
         <Route element={<AuthProvider />}>
           <Route element={<SidebarWithHeader />}>
             <Route path="/" element={<StockApp />} />
+            <Route path="*" element={<EmptyPage />} />
           </Route>
           <Route path="/login" element={<Login />} />
         </Route>

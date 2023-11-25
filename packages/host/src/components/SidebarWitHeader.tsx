@@ -18,19 +18,14 @@ import {
   MenuItem,
   MenuList,
 } from '@chakra-ui/react';
-import {
-  FiHome,
-  FiMenu,
-  FiBell,
-  FiChevronDown,
-  FiUsers,
-  FiUser,
-} from 'react-icons/fi';
+import { FiHome, FiMenu, FiChevronDown, FiUsers, FiUser } from 'react-icons/fi';
+import { Link as ReactRouterLink } from 'react-router-dom';
 import { IconType } from 'react-icons';
 import { Outlet } from 'react-router';
 import { LoadingMF } from './LoadingMF';
 import { ErrorBoundary } from './ErrorBoundary';
 import { ErrorMF } from './ErrorMF';
+import { useAuth } from '../contexts/AuthContext';
 
 interface LinkItemProps {
   name: string;
@@ -110,7 +105,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem key={link.name} icon={link.icon} to={link.to}>
           {link.name}
         </NavItem>
       ))}
@@ -121,13 +116,15 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 interface NavItemProps extends FlexProps {
   icon: IconType;
   children: string;
+  to: string;
 }
-const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, to, ...rest }: NavItemProps) => {
   return (
     <Link
-      href="#"
       style={{ textDecoration: 'none' }}
       _focus={{ boxShadow: 'none' }}
+      as={ReactRouterLink}
+      to={to}
     >
       <Flex
         align="center"
@@ -162,6 +159,7 @@ interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+  const { user, logout } = useAuth();
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -192,12 +190,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton
-          size="lg"
-          variant="ghost"
-          aria-label="open menu"
-          icon={<FiBell />}
-        />
         <Flex alignItems={'center'}>
           <Menu>
             <MenuButton
@@ -213,9 +205,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Justina Clark</Text>
+                  <Text fontSize="sm">{user.name}</Text>
                   <Text fontSize="xs" color="gray.600">
-                    Admin
+                    {user.role[0]}
                   </Text>
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
@@ -227,7 +219,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
             >
-              <MenuItem>Sair</MenuItem>
+              <MenuItem onClick={logout}>Sair</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

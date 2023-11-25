@@ -10,6 +10,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { Controller, useForm } from 'react-hook-form';
+import { useAuth } from '../contexts/AuthContext';
 
 interface FormData {
   username: string;
@@ -17,6 +18,7 @@ interface FormData {
 }
 
 export default function Login() {
+  const { login } = useAuth();
   const {
     control,
     formState: { errors },
@@ -25,8 +27,8 @@ export default function Login() {
     reValidateMode: 'onChange',
   });
 
-  function onSubmit(data: FormData) {
-    console.log(data);
+  async function onSubmit(data: FormData) {
+    await login(data);
   }
   return (
     <Box
