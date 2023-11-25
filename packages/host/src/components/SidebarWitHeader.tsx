@@ -65,7 +65,6 @@ export default function SidebarWithHeader() {
       <Box
         ml={{ base: 0, md: 60 }}
         p="4"
-        w="full"
         h="full"
         display="flex"
         justifyContent="center"
