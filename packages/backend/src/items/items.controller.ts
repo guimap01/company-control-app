@@ -3,14 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Query,
+  Put,
 } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { Roles } from 'src/shared/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('items')
 export class ItemsController {
@@ -33,11 +35,13 @@ export class ItemsController {
     return this.itemsService.findOne(id);
   }
 
-  @Patch(':id')
+  @Roles(Role.ADMIN)
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
     return this.itemsService.update(id, updateItemDto);
   }
 
+  @Roles(Role.ADMIN)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.itemsService.remove(id);

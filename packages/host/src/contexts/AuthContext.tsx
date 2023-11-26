@@ -86,7 +86,6 @@ export function AuthProvider() {
   useEffect(() => {
     checkIsAuthenticated();
   }, [checkIsAuthenticated]);
-
   return (
     <AuthContext.Provider
       value={{

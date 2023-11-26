@@ -1,5 +1,5 @@
-import { api } from '../api';
 import { useQuery } from 'react-query';
+import { useHost } from '../../../context/HostProvider';
 
 interface ListItemsParams {
   page: number;
@@ -30,16 +30,20 @@ interface ListItemsResponse {
   count: number;
 }
 
-async function listItems({ page, name }: ListItemsParams) {
-  const resp = await api.get<ListItemsResponse>('/items', {
-    params: {
-      page,
-      name,
-    },
-  });
-  return resp.data;
-}
-
 export const useListItems = ({ page, name }: ListItemsParams) => {
-  return useQuery(['items', { page, name }], () => listItems({ page, name }));
+  const { api } = useHost();
+
+  const listItems = async ({ page, name }: ListItemsParams) => {
+    const resp = await api.get<ListItemsResponse>('/items', {
+      params: {
+        page,
+        name,
+      },
+    });
+    return resp.data;
+  };
+
+  return useQuery(['items', { page, name }], () => listItems({ page, name }), {
+    keepPreviousData: true,
+  });
 };

@@ -1,4 +1,3 @@
-import { Controller, useForm } from 'react-hook-form';
 import {
   Box,
   Button,
@@ -12,30 +11,67 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Select,
 } from '@chakra-ui/react';
+import { Controller, useForm } from 'react-hook-form';
+import { MdArrowDropDown } from 'react-icons/md';
+import { toast } from 'react-toastify';
+import { useCreateOrEditItemMutation } from './hooks/useCreateOrEditItemMutation';
+import { useListItemTypesOptions } from './hooks/useListItemTypesOptions';
+import { Item } from './hooks/useListItems';
 
 interface FormData {
   name: string;
   amount: number;
   itemTypeId: string;
-  itemCategoryId: string;
 }
 
 export function CreateItemModal({
   isOpen,
   onClose,
+  item,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  item?: Item;
 }) {
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    defaultValues: {
+      name: item?.name,
+      amount: item?.amount,
+      itemTypeId: item?.itemTypeId,
+    },
+  });
+  const { data: itemTypesData } = useListItemTypesOptions();
+  const { mutateAsync, isLoading } = useCreateOrEditItemMutation(item?.id);
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit = async (data: FormData) => {
+    const itemType = itemTypesData?.find((item) => item.id === data.itemTypeId);
+    await mutateAsync(
+      {
+        name: data.name,
+        amount: Number(data.amount),
+        itemTypeId: data.itemTypeId,
+        itemCategoryId: itemType?.itemCategoryId as string,
+      },
+      {
+        onSuccess: () => {
+          const message = item
+            ? 'Item editado com sucesso!'
+            : 'Item criado com sucesso!';
+          onClose();
+          toast.success(message);
+        },
+        onError: () => {
+          const message = item ? 'Erro ao editar item!' : 'Erro ao criar item!';
+          toast.error(message);
+        },
+      }
+    );
   };
 
   return (
@@ -81,30 +117,31 @@ export function CreateItemModal({
               <Controller
                 name="itemTypeId"
                 control={control}
-                render={({ field }) => <Input {...field} />}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    icon={<MdArrowDropDown />}
+                    placeholder="Selecione um tipo"
+                  >
+                    {itemTypesData?.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </Select>
+                )}
                 rules={{
                   required: true,
                 }}
               />
               <FormErrorMessage>Tipo é obrigatório</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!!errors.itemCategoryId}>
-              <FormLabel>Categoria</FormLabel>
-              <Controller
-                name="itemCategoryId"
-                control={control}
-                render={({ field }) => <Input {...field} />}
-                rules={{
-                  required: true,
-                }}
-              />
-              <FormErrorMessage>Categoria é obrigatório</FormErrorMessage>
-            </FormControl>
+
             <Box w="full" display="flex" justifyContent="end" gap={1} mt={2}>
               <Button mr={3} onClick={onClose}>
                 Cancelar
               </Button>
-              <Button colorScheme="blue" type="submit">
+              <Button colorScheme="blue" type="submit" isLoading={isLoading}>
                 Salvar
               </Button>
             </Box>

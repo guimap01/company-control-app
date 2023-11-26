@@ -28,6 +28,11 @@ export class ItemTypesController {
     return this.itemTypesService.findAll(query);
   }
 
+  @Get('options')
+  findAllOptions() {
+    return this.itemTypesService.findAllOptions();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.itemTypesService.findOne(id);

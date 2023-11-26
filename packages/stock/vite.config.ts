@@ -25,6 +25,7 @@ export default defineConfig({
         'axios',
         'react-query',
         'react-hook-form',
+        'react-toastify',
       ],
     }),
   ],

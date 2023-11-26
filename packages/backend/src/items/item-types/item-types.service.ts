@@ -72,4 +72,14 @@ export class ItemTypesService {
       },
     });
   }
+
+  findAllOptions() {
+    return this.prismaService.itemType.findMany({
+      select: {
+        id: true,
+        name: true,
+        itemCategoryId: true,
+      },
+    });
+  }
 }

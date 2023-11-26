@@ -6,14 +6,26 @@ import { ItemTypesController } from './item-types/item-types.controller';
 import { ItemTypesService } from './item-types/item-types.service';
 import { ItemCategoriesController } from './item-categories/item-categories.controller';
 import { ItemCategoriesService } from './item-categories/item-categories.service';
+import { DepositsService } from './deposits/deposits.service';
+import { WithdrawalsService } from './withdraws/withdrawals.service';
+import { DepositsController } from './deposits/deposits.controller';
+import { WithdrawalsController } from './withdraws/withdrawals.controller';
 
 @Module({
-  controllers: [ItemsController, ItemTypesController, ItemCategoriesController],
+  controllers: [
+    ItemsController,
+    ItemTypesController,
+    ItemCategoriesController,
+    DepositsController,
+    WithdrawalsController,
+  ],
   providers: [
     ItemsService,
     ItemTypesService,
     ItemCategoriesService,
     PrismaService,
+    DepositsService,
+    WithdrawalsService,
   ],
 })
 export class ItemsModule {}
