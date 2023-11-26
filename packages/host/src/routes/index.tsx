@@ -45,6 +45,9 @@ function StockWrapper({ queryClient }: { queryClient: QueryClient }) {
 
 function EmployeesWrapper({ queryClient }: { queryClient: QueryClient }) {
   const { user } = useAuth();
+  if (!user.role.includes('ADMIN')) {
+    return <EmptyPage />;
+  }
 
   return <EmployeesApp queryClient={queryClient} api={api} user={user} />;
 }

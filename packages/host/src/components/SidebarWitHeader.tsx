@@ -31,10 +31,11 @@ interface LinkItemProps {
   name: string;
   icon: IconType;
   to: string;
+  admin?: boolean;
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Estoque', icon: FiHome, to: '/' },
-  { name: 'Funcionários', icon: FiUsers, to: '/employees' },
+  { name: 'Funcionários', icon: FiUsers, to: '/employees', admin: true },
 ];
 
 const appName = 'App Controle';
@@ -87,6 +88,8 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const { user } = useAuth();
+  const isAdmin = user.role.includes('ADMIN');
   return (
     <Box
       transition="3s ease"
@@ -103,7 +106,15 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
           {appName}
         </Text>
       </Flex>
-      {LinkItems.map((link) => (
+      {LinkItems.filter((link) => {
+        if (isAdmin && link.admin) {
+          return true;
+        }
+        if (!link.admin) {
+          return true;
+        }
+        return false;
+      }).map((link) => (
         <NavItem key={link.name} icon={link.icon} to={link.to}>
           {link.name}
         </NavItem>
