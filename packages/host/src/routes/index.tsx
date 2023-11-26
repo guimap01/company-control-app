@@ -8,6 +8,7 @@ import SidebarWithHeader from '../components/SidebarWitHeader';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import Login from '../pages/Login';
 const StockApp = lazy(() => import('stockApp/Stock'));
+const EmployeesApp = lazy(() => import('employeesApp/Employees'));
 
 interface AppRoutesProps {
   queryClient: QueryClient;
@@ -23,6 +24,10 @@ export const AppRoutes = ({ queryClient }: AppRoutesProps) => {
               path="/"
               element={<StockWrapper queryClient={queryClient} />}
             />
+            <Route
+              path="/employees"
+              element={<EmployeesWrapper queryClient={queryClient} />}
+            />
             <Route path="*" element={<EmptyPage />} />
           </Route>
           <Route path="/login" element={<Login />} />
@@ -36,4 +41,10 @@ function StockWrapper({ queryClient }: { queryClient: QueryClient }) {
   const { user } = useAuth();
 
   return <StockApp queryClient={queryClient} api={api} user={user} />;
+}
+
+function EmployeesWrapper({ queryClient }: { queryClient: QueryClient }) {
+  const { user } = useAuth();
+
+  return <EmployeesApp queryClient={queryClient} api={api} user={user} />;
 }

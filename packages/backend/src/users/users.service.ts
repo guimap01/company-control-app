@@ -19,11 +19,30 @@ export class UsersService {
     });
   }
 
-  findAll({ page, withDeleted }: { page: number; withDeleted?: boolean }) {
+  findAll({
+    page,
+    withDeleted,
+    name,
+  }: {
+    page: number;
+    withDeleted?: boolean;
+    name: string;
+  }) {
     return findAllPaginated<User>({
       service: this.prismaService.user,
       page,
       withDeleted,
+      where: {
+        name: {
+          contains: name,
+        },
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+      },
     });
   }
 
@@ -39,6 +58,12 @@ export class UsersService {
     return this.prismaService.user.findUniqueOrThrow({
       where: {
         id,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
       },
     });
   }

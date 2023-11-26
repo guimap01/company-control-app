@@ -13,6 +13,7 @@ export default defineConfig({
       name: 'app',
       remotes: {
         stockApp: 'http://localhost:5001/assets/remoteEntry.js',
+        employeesApp: 'http://localhost:5002/assets/remoteEntry.js',
       },
       shared: [
         'react',

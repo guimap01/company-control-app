@@ -78,7 +78,7 @@ export function CreateItemModal({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Criar item</ModalHeader>
+        <ModalHeader>{item ? 'Editar' : 'Criar'} item</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Box

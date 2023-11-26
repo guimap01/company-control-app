@@ -245,7 +245,9 @@ function ListItemsHeader({
           </Button>
         </Box>
       </VStack>
-      <CreateItemModal isOpen={isModalOpen} onClose={onCloseModal} />
+      {isModalOpen && (
+        <CreateItemModal isOpen={isModalOpen} onClose={onCloseModal} />
+      )}
     </>
   );
 }
