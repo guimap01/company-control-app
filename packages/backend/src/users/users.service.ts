@@ -15,6 +15,7 @@ export class UsersService {
         email: createUserDto.email,
         name: createUserDto.name,
         password: createUserDto.password,
+        role: createUserDto.role,
       },
     });
   }
